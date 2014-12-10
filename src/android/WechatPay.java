@@ -19,9 +19,15 @@
 
 package co.lingeng.cordova.wechat_pay;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.cordova.*;
 
+import android.util.Log;
+
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
@@ -29,14 +35,8 @@ public class WechatPay extends CordovaPlugin
 {
   private static IWXAPI api;
     private static final String WXAPP_ID = "";
-    /** 
-     * 注意 构造方法不能为 
-     *  
-     * Plugin_intent(){} 
-     *  
-     * 可以不写或者 定义为如下 
-     *  
-     */  
+    private static final String PARTNER_ID = "";
+ 
     public WechatPay() {  
     }  
   
@@ -50,27 +50,33 @@ public class WechatPay extends CordovaPlugin
         api = WXAPIFactory.createWXAPI(cordova.getActivity(), WXAPP_ID, true);
         api.registerApp(WXAPP_ID);
         
-        if (action.equals("start")) {  
-            // 获取JS传递的args的第一个参数  
-            String infos = args.getString(0); 
-            this.start(infos);
-            return true;  
-        }  
-        return false;  
-  
+        if (action.equals("start")) {
+            List<String> strList = new ArrayList<String>();
+            Log.d("debug", args.toString());
+            for(int i=0; i<args.length(); i++){
+              strList.add(args.getString(i));
+            }
+            this.start(strList);
+            return true;
+        }
+        return false;
+
     }  
   
-    // 方法执行体  
-    private void start(String str) {  
-        // cordova.getActivity() 获取当前activity的this  
+    private void start(List<String> strList) {  
 //      System.out.print("123" + cordova.getActivity().toString());
 //      Toast.makeText(cordova.getActivity(), str, Toast.LENGTH_SHORT).show();
 //      callbackContext.success("succeed");
       
       // send oauth request 
-      final SendAuth.Req req = new SendAuth.Req();
-      req.scope = "snsapi_userinfo";
-      req.state = "wechat_sdk_demo_test";
+      PayReq req = new PayReq();
+      req.appId = WechatPay.WXAPP_ID;
+      req.partnerId = WechatPay.PARTNER_ID;
+      req.prepayId = strList.get(0);
+      req.nonceStr = strList.get(3);
+      req.timeStamp = strList.get(4);
+      req.packageValue = "Sign=" + strList.get(1);
+      req.sign = strList.get(2);
       api.sendReq(req);
     }
     public static void successCallback(String result){
