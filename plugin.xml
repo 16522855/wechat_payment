@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+        id="co.lingeng.cordova.wechat_pay"
+        version="0.0.1">
+	<engines>
+	    <engine name="cordova" version=">=3.6.0"/>
+	</engines>
+    <name>WechatPay</name>
+    <description>Larry's WechatPay Plugin</description>
+    <author>Larry</author>
+    <license>Apache 2.0 License</license>
+    <keywords>cordova,wechat,payment,weixin</keywords>
+    <js-module src="www/plugin.js" name="WechatPay">
+        <clobbers target="WechatPay" />
+    </js-module>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WechatPay" >
+                <param name="android-package" value="co.lingeng.cordova.wechat_pay.WechatPay"/>
+            </feature>
+        </config-file>
+        <source-file src="src/android/WechatPay.java" target-dir="src/co/lingeng/cordova/wechat_pay" />
+    </platform>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="WechatPay">
+                <param name="ios-package" value="WechatPay"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/WechatPay-Bridging-Header.h" />
+        <source-file src="src/ios/WechatPay.swift" />
+    </platform>
+</plugin>
