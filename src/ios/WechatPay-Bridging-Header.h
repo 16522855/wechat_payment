@@ -3,5 +3,5 @@
 //
 
 #import <Cordova/CDV.h>
-
+#import <CommonCrypto/CommonCrypto.h>
 #import "WXApi.h"
